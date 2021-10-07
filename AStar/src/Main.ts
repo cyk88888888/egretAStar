@@ -49,7 +49,6 @@ class Main extends eui.UILayer {
                 Global.parseThm();
                 resolve();
             }, this);
-
         })
     }
 
