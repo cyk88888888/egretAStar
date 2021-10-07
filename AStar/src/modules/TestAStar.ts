@@ -62,6 +62,21 @@ namespace G {
             self._pathShape = new egret.Shape();//路过的格子轨迹
             self.grp_container.addChild(self._pathShape);
 
+            //障碍物
+            let blockShape = new egret.Shape();
+            let blockGraphics = blockShape.graphics;
+            self.grp_container.addChild(blockShape);
+            let bolckCount = Math.floor((self._grid.numCols * self._grid.numRows) / 4);
+            for (let i = 0; i < bolckCount; i++) {
+                let _x = Math.floor(Math.random() * self._grid.numCols);
+                let _y = Math.floor(Math.random() * self._grid.numRows);
+                self._grid.setWalkable(_x, _y, false);
+                let node = self._grid.getNode(_x, _y);
+                blockGraphics.lineStyle(0);
+                blockGraphics.beginFill(self.getColor(node));
+                blockGraphics.drawRect(_x * self._cellSize, _y * self._cellSize, self._cellSize, self._cellSize);
+            }
+
             let line = new egret.Shape();
             let lineGraphics = line.graphics;
             self.grp_container.addChild(line);
@@ -77,21 +92,6 @@ namespace G {
                 lineGraphics.lineStyle(1);
                 lineGraphics.moveTo(0, i * self._cellSize);
                 lineGraphics.lineTo(self._grid.numCols * self._cellSize, i * self._cellSize);
-            }
-
-            //障碍物
-            let blockShape = new egret.Shape();
-            let blockGraphics = blockShape.graphics;
-            self.grp_container.addChild(blockShape);
-            let bolckCount = Math.floor((self._grid.numCols * self._grid.numRows) / 4);
-            for (let i = 0; i < bolckCount; i++) {
-                let _x = Math.floor(Math.random() * self._grid.numCols);
-                let _y = Math.floor(Math.random() * self._grid.numRows);
-                self._grid.setWalkable(_x, _y, false);
-                let node = self._grid.getNode(_x, _y);
-                blockGraphics.lineStyle(0);
-                blockGraphics.beginFill(self.getColor(node));
-                blockGraphics.drawRect(_x * self._cellSize, _y * self._cellSize, self._cellSize, self._cellSize);
             }
         }
 
