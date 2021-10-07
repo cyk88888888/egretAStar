@@ -26,8 +26,6 @@ namespace G {
             self._pathShape = new egret.Shape();
             self.grp_container.addChild(self._pathShape);
             self.onReset();
-            self.grp_container.addEventListener(egret.TouchEvent.TOUCH_TAP, self.onGridClick, self);
-            self.btn_reset.addEventListener(egret.TouchEvent.TOUCH_TAP, self.onReset, self);
         }
 
         private onReset(){
@@ -72,17 +70,6 @@ namespace G {
             return shade << 16 | shade << 8 | shade;
         }
 
-        //单元格点击时，切换节点为普通节点或障碍物节点
-        private onGridClick(event: egret.TouchEvent) {
-            let self = this;
-            let xPos = Math.floor(event.localX / self._cellSize);
-            let yPos = Math.floor(event.localY / self._cellSize);
-
-            self._grid.setWalkable(xPos, yPos, !self._grid.getNode(xPos, yPos).walkable);
-            self.drawGrid();
-            self.findPath();
-        }
-
         //找路
         private findPath() {
             let self = this;
@@ -103,6 +90,31 @@ namespace G {
                     path[i].y * self._cellSize + self._cellSize / 2,
                     self._cellSize / 3);
             }
+        }
+
+        //单元格点击时，切换节点为普通节点或障碍物节点
+        private _tap_grp_container(event: egret.TouchEvent){
+            let self = this;
+            let xPos = Math.floor(event.localX / self._cellSize);
+            let yPos = Math.floor(event.localY / self._cellSize);
+
+            let node = self._grid.getNode(xPos, yPos);
+            if(!node) return;
+            self._grid.setWalkable(xPos, yPos, !node.walkable);
+            self.drawGrid();
+            self.findPath();
+        }
+
+        private _tap_btn_reset(){
+            let self = this;
+            self.onReset();
+        }
+
+        private _tap_btn_translate(){
+            let self = this;
+            self.parent.removeChild(self);
+            let testAStar = new G.TestAStar();
+            Global.stage .addChild(testAStar);
         }
     }
 }

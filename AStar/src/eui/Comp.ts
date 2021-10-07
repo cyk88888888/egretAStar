@@ -38,13 +38,20 @@ namespace mo {
             self.addBtnCLickListener();
         }
 
+        private _objTapMap:{[objName: string]:Function};
         /**添加按钮点击事件监听**/
         private addBtnCLickListener(){
             let self = this;
-            for(let key in self){
-                let obj = self[key];
-                if(self["_tap_" + key] && obj instanceof egret.DisplayObject){
-                    obj.addEventListener(egret.TouchEvent.TOUCH_TAP, self["_tap_" + key], self);
+            self._objTapMap = {};
+            for(let objName in self){
+                let obj = self[objName];
+                if(obj instanceof egret.DisplayObject){
+                    obj.name = objName;
+                    if(self["_tap_" + objName]){
+                        let tapFunc = self["_tap_" + objName];
+                        self._objTapMap[objName] = tapFunc;
+                        obj.addEventListener(egret.TouchEvent.TOUCH_TAP, tapFunc, self);
+                    }
                 }
             }
         }
@@ -60,9 +67,16 @@ namespace mo {
 
         private onRemoveFormStage(){
             let self = this;
+            console.log("我从到舞台移除了");
             self.removeEventListener(egret.Event.ADDED_TO_STAGE,self.onRemoveFormStage, self);
             self.removeEventListener(egret.Event.ADDED_TO_STAGE,self.onAddToStage, self);
-            console.log("我从到舞台移除了");
+            if(self._objTapMap){
+                for(let objName in self._objTapMap){
+                    let obj = self[objName];
+                    if(obj instanceof egret.DisplayObject) obj.removeEventListener(egret.TouchEvent.TOUCH_TAP, self._objTapMap[objName], self);
+                }
+            }
+
         }
     }
 }

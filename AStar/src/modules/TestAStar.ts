@@ -5,9 +5,10 @@
  */
 namespace G {
     export class TestAStar extends mo.Layer {
-        public grp_container:eui.Group;
-        public btn_reset:eui.Button;
-        public lbl_cost:eui.Label;
+        public grp_container: eui.Group;
+        public btn_reset: eui.Button;
+        public btn_translate: eui.Button;
+        public lbl_cost: eui.Label;
 
         private _cellSize: number;//每一个格子的大小
         private _speed: number;//人物移动速度、
@@ -104,25 +105,6 @@ namespace G {
             return 0xffffff;
         }
 
-        /** 鼠标点击时随机设置终点，并以player当前位置做为起点 */
-        private onGridClick(event: egret.TouchEvent) {
-            let self = this;
-            self._pathShape.graphics.clear();
-            let xPos = Math.floor(event.stageX / self._cellSize);
-            let yPos = Math.floor(event.stageY / self._cellSize);
-            self._grid.setEndNode(xPos, yPos);
-            let endNode: Nodes = self._grid.endNode;
-            if (endNode.walkable) {
-                self._pathShape.graphics.lineStyle(0);
-                self._pathShape.graphics.beginFill(self.getColor(endNode));
-                self._pathShape.graphics.drawRect(xPos * self._cellSize, yPos * self._cellSize, self._cellSize, self._cellSize);
-            }
-            xPos = Math.floor(self._player.x / self._cellSize);
-            yPos = Math.floor(self._player.y / self._cellSize);
-            self._grid.setStartNode(xPos, yPos);
-            self.findPath();
-        }
-
         /** 寻路 */
         private findPath() {
             let self = this;
@@ -163,14 +145,38 @@ namespace G {
             }
         }
 
-        private _tap_grp_container(event: egret.TouchEvent){
+        /** 鼠标点击时随机设置终点，并以player当前位置做为起点 */
+        private _tap_grp_container(event: egret.TouchEvent) {
             let self = this;
-            self.onGridClick(event);
+            self._pathShape.graphics.clear();
+            let xPos = Math.floor(event.stageX / self._cellSize);
+            let yPos = Math.floor(event.stageY / self._cellSize);
+            let node = self._grid.getNode(xPos, yPos);
+            if(!node) return;
+            self._grid.setEndNode(xPos, yPos);
+            let endNode: Nodes = self._grid.endNode;
+            if (endNode.walkable) {
+                self._pathShape.graphics.lineStyle(0);
+                self._pathShape.graphics.beginFill(self.getColor(endNode));
+                self._pathShape.graphics.drawRect(xPos * self._cellSize, yPos * self._cellSize, self._cellSize, self._cellSize);
+            }
+            xPos = Math.floor(self._player.x / self._cellSize);
+            yPos = Math.floor(self._player.y / self._cellSize);
+            self._grid.setStartNode(xPos, yPos);
+            self.findPath();
         }
 
-        private _tap_btn_reset(){
+        private _tap_btn_reset() {
             let self = this;
+            self.removeEventListener(egret.Event.ENTER_FRAME, self.onEnterFrame, self);
             self.onReset();
+        }
+
+        private _tap_btn_translate() {
+            let self = this;
+            self.parent.removeChild(self);
+            let testAStar2 = new G.TestAStar2();
+            Global.stage.addChild(testAStar2);
         }
     }
 }
