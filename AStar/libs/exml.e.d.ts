@@ -3,6 +3,10 @@ declare module skins{
 	}
 }
 declare module skins{
+	class TestAStar2 extends eui.Skin{
+	}
+}
+declare module skins{
 	class ButtonSkin extends eui.Skin{
 	}
 }
