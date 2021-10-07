@@ -3,7 +3,7 @@
 	 width="640"
 	height="1280" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:mo="mo.*">
 	<e:Rect fillColor="0xFFFFFF" top="0" bottom="0" left="0" right="0" x="0" y="0"/>
-	<e:Group id="grp_container" width="640" top="0" bottom="58" locked="true">
+	<e:Group id="grp_container" width="640" top="0" bottom="58">
 	</e:Group>
 	<e:Button id="btn_reset" label="重置" bottom="2" right="114"/>
 	<e:Button id="btn_translate" label="模拟平路" bottom="2" y="1238" right="0"/>
