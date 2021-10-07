@@ -16,7 +16,7 @@ class Main extends eui.UILayer {
     }
 
     private async runGame() {
-        await this.loadResource()
+        await this.loadResource();
         this.createGameScene();
         await platform.login();
         const userInfo = await platform.getUserInfo();
@@ -46,6 +46,7 @@ class Main extends eui.UILayer {
             //加载皮肤主题配置文件,可以手动修改这个文件。替换默认皮肤。
             let theme = new eui.Theme("resource/default.thm.json", this.stage);
             theme.addEventListener(eui.UIEvent.COMPLETE, () => {
+                Global.parseThm();
                 resolve();
             }, this);
 
@@ -63,6 +64,6 @@ class Main extends eui.UILayer {
         let testAStar = new G.TestAStar();
         Global.stage .addChild(testAStar);
         // let testAStar2 = new G.TestAStar2();
-        // self.addChild(testAStar2);
+        // Global.stage.addChild(testAStar2);
     }
 }

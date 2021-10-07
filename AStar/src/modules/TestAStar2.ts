@@ -4,40 +4,60 @@
  *
  */
 namespace G {
-    export class TestAStar2 extends egret.Sprite {
-        private _cellSize = 40;
-        private _grid: Grid;
+    export class TestAStar2 extends mo.Layer {
+        public grp_container: eui.Group;
+        public btn_reset: eui.Button;
+        public lbl_cost: eui.Label;
 
-        public constructor() {
-            super();
+        private _cellSize: number;
+        private _grid: Grid;
+        private _pathShape: egret.Shape;
+
+        protected ctor() {
             let self = this;
-            self.touchEnabled = true;
-            self._grid = new Grid(Math.ceil(Global.stage.stageWidth / self._cellSize), Math.ceil(Global.stage.stageHeight / self._cellSize));
+            self._cellSize = 40;
+        }
+
+        protected onEnter() {
+            let self = this;
+            self._grid = new Grid(Math.ceil(self.grp_container.width / self._cellSize), Math.floor((Global.stage.stageHeight - 58) / self._cellSize));
             self._grid.setStartNode(1, 1);
             self._grid.setEndNode(self._grid.numCols - 1, self._grid.numRows - 1);
+            self._pathShape = new egret.Shape();
+            self.grp_container.addChild(self._pathShape);
+            self.onReset();
+            self.grp_container.addEventListener(egret.TouchEvent.TOUCH_TAP, self.onGridClick, self);
+            self.btn_reset.addEventListener(egret.TouchEvent.TOUCH_TAP, self.onReset, self);
+        }
+
+        private onReset(){
+            let self = this;
+            self._pathShape.graphics.clear();
             for (let i = 0; i < self._grid.numCols; i++) {
                 for (let j = 0; j < self._grid.numRows; j++) {
+                    let node = self._grid.getNode(i, j);
                     //为每个节点设置不同的“代价权重因子”
                     let mult = Math.sin(i * .50) + Math.cos(j * .2 + i * .05);
-                    self._grid.getNode(i, j).costMultiplier = Math.abs(mult) + 1;
+                    node.costMultiplier = Math.abs(mult) + 1;
+                    node.walkable = true;
                 }
             }
             self.drawGrid();
             self.findPath();
-            self.addEventListener(egret.TouchEvent.TOUCH_TAP, self.onGridClick, self);
         }
 
         //画网格
         public drawGrid() {
             let self = this;
             let _cellSize = self._cellSize;
-            self.graphics.clear();
+            self.lbl_cost.text = "本次寻路总耗时";
+            self._pathShape.graphics.clear();
             for (let i = 0; i < self._grid.numCols; i++) {
                 for (let j = 0; j < self._grid.numRows; j++) {
                     let node: Nodes = self._grid.getNode(i, j);
-                    self.graphics.lineStyle(0.5);
-                    self.graphics.beginFill(self.getColor(node));
-                    self.graphics.drawRect(i * _cellSize, j * _cellSize, _cellSize, _cellSize);
+                    self._pathShape.graphics.lineStyle(0.5);
+                    self._pathShape.graphics.beginFill(self.getColor(node));
+                    self._pathShape.graphics.drawRect(i * _cellSize, j * _cellSize, _cellSize, _cellSize);
                 }
             }
         }
@@ -68,18 +88,8 @@ namespace G {
             let self = this;
             let astar: AStar = new AStar();
             if (astar.findPath(self._grid)) {
+                self.lbl_cost.text = "本次寻路总耗时: " + astar.costTotTime + "秒";
                 self.showPath(astar);
-            }
-        }
-
-        private showVisited(astar: AStar) {
-            let self = this;
-            let visited = astar.visited;
-            let _cellSize = self._cellSize;
-            for (let i = 0; i < visited.length; i++) {
-                self.graphics.beginFill(0xcccccc);
-                self.graphics.drawRect(visited[i].x * _cellSize, visited[i].y * _cellSize, _cellSize, _cellSize);
-                self.graphics.endFill();
             }
         }
 
@@ -87,9 +97,9 @@ namespace G {
             let self = this;
             let path = astar.path;
             for (let i = 0; i < path.length; i++) {
-                self.graphics.lineStyle(0);
-                self.graphics.beginFill(0);
-                self.graphics.drawCircle(path[i].x * self._cellSize + self._cellSize / 2,
+                self._pathShape.graphics.lineStyle(0);
+                self._pathShape.graphics.beginFill(0);
+                self._pathShape.graphics.drawCircle(path[i].x * self._cellSize + self._cellSize / 2,
                     path[i].y * self._cellSize + self._cellSize / 2,
                     self._cellSize / 3);
             }

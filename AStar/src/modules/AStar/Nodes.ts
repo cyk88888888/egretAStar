@@ -2,23 +2,23 @@
  * 每个节点的信息
  * @author CYK
  */
-class Nodes{
-    public x:number;
-    public y:number;
-    public f:number;
-    public g:number;
-    public h:number;
-    public walkable:Boolean=true;//是否可穿越（通常把障碍物节点设置为false）
-    public parent:Nodes;
-    public costMultiplier:number = 1.0;//代价因子
+class Nodes {
+    public x: number;
+    public y: number;
+    public f: number;
+    public g: number;
+    public h: number;
+    public walkable: Boolean = true;//是否可穿越（通常把障碍物节点设置为false）
+    public parent: Nodes;
+    public costMultiplier: number = 1.0;//代价因子
 
-    public constructor(x:number, y:number) {
+    public constructor(x: number, y: number) {
         let self = this;
-        self.x=x;
-        self.y=y;
+        self.x = x;
+        self.y = y;
     }
 
-    public toString():String{
+    public toString(): String {
         let self = this;
         return "x=" + self.x.toString() + ",y=" + self.y.toString() + ",g=" + Number(self.g).toFixed(1) + ",h=" + Number(self.h).toFixed(1) + ",f=" + Number(self.f).toFixed(1);
     }

@@ -9,11 +9,16 @@ namespace mo {
             self.ctor();
             self.ctor_a();
             if(!self._skinName){
-                console.error("请设置皮肤_skinName");
-                return;
+                let className = self._className;
+                let defaultSkinName = Global.skinNames[className];
+                if(!defaultSkinName){
+                    console.error("找不到类" + className + "的皮肤");
+                    return;
+                }
+                self._skinName = defaultSkinName;
             }
             this.addEventListener(eui.UIEvent.COMPLETE, self.initUI, self);
-            self.skinName = "resource/skins/" + self._skinName;
+            self.skinName = self._skinName;
         }
         protected ctor_b(){}
         protected ctor_a(){}
@@ -30,5 +35,9 @@ namespace mo {
             self.onEnter_a();
         }
 
+        public get _className():string{
+            let self = this;
+            return self["constructor"]["name"];
+        }
     }
 }

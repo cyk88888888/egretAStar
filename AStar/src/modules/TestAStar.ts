@@ -19,7 +19,6 @@ namespace G {
 
         protected ctor() {
             let self = this;
-            self._skinName = "aStar/TestAStar.exml";
             self._cellSize = 40;
             self._speed = 1;
         }
