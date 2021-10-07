@@ -7,8 +7,7 @@ class Main extends eui.UILayer {
         super.createChildren();
         //inject the custom material parser
         //注入自定义的素材解析器
-        let assetAdapter = new AssetAdapter();
-        egret.registerImplementation("eui.IAssetAdapter", assetAdapter);
+        egret.registerImplementation("eui.IAssetAdapter", new AssetAdapter());
         egret.registerImplementation("eui.IThemeAdapter", new ThemeAdapter());
         this.runGame().catch(e => {
             console.log(e);
@@ -46,8 +45,10 @@ class Main extends eui.UILayer {
             //加载皮肤主题配置文件,可以手动修改这个文件。替换默认皮肤。
             let theme = new eui.Theme("resource/default.thm.json", this.stage);
             theme.addEventListener(eui.UIEvent.COMPLETE, () => {
-                Global.parseThm();
-                resolve();
+                eui.getTheme("resource/default.thm.json", function (data) {
+                    Global.parseThm(data);
+                    resolve();
+                });
             }, this);
         })
     }
