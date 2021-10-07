@@ -43,10 +43,8 @@ namespace mo {
             let self = this;
             for(let key in self){
                 let obj = self[key];
-                if(key.indexOf("btn_") > -1 && obj instanceof egret.DisplayObject){
-                    if(self["_tap_" + key]){
-                        obj.addEventListener(egret.TouchEvent.TOUCH_TAP, self["_tap_" + key], self);
-                    }
+                if(self["_tap_" + key] && obj instanceof egret.DisplayObject){
+                    obj.addEventListener(egret.TouchEvent.TOUCH_TAP, self["_tap_" + key], self);
                 }
             }
         }

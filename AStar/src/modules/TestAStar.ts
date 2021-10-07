@@ -27,8 +27,6 @@ namespace G {
             let self = this;
             self.makeGrid();
             self.makePlayer();
-            self.grp_container.addEventListener(egret.TouchEvent.TOUCH_TAP, self.onGridClick, self);
-            // self.btn_reset.addEventListener(egret.TouchEvent.TOUCH_TAP, self.onReset, self);
         }
 
         private onReset() {
@@ -163,6 +161,11 @@ namespace G {
                 self._player.x += dx * self._speed;
                 self._player.y += dy * self._speed;
             }
+        }
+
+        private _tap_grp_container(event: egret.TouchEvent){
+            let self = this;
+            self.onGridClick(event);
         }
 
         private _tap_btn_reset(){
