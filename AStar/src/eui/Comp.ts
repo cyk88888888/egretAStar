@@ -9,7 +9,7 @@ namespace mo {
             self.ctor();
             self.ctor_a();
             if(!self._skinName){
-                let className = self._className;
+                let className = self.__className;
                 let defaultSkinName = Global.skinNames[className];
                 if(!defaultSkinName){
                     console.error("找不到类" + className + "的皮肤");
@@ -56,7 +56,7 @@ namespace mo {
             }
         }
 
-        public get _className():string{
+        public get __className():string{
             let self = this;
             return self["constructor"]["name"];
         }
