@@ -4,7 +4,7 @@
  *
  */
 namespace G {
-    export class TestAStar extends mo.Layer {
+    export class TestAStar extends cyk.Layer {
         public grp_container: eui.Group;
         public btn_reset: eui.Button;
         public btn_translate: eui.Button;
@@ -18,13 +18,13 @@ namespace G {
         private _path: Nodes[];
         private _pathShape: egret.Shape;//路过的格子轨迹，包含绘制终点
 
-        protected ctor() {
+        private ctor() {
             let self = this;
             self._cellSize = 40;
             self._speed = 1;
         }
 
-        protected onEnter() {
+        private onEnter() {
             let self = this;
             self.makeGrid();
             self.makePlayer();
@@ -174,9 +174,13 @@ namespace G {
 
         private _tap_btn_translate() {
             let self = this;
-            self.parent.removeChild(self);
-            let testAStar2 = new G.TestAStar2();
-            Global.stage.addChild(testAStar2);
+            self.close();
+            G.TestAStar2.show(Global.stage);
+        }
+
+        private onExit(){
+            let self = this;
+            self.removeEventListener(egret.Event.ENTER_FRAME, self.onEnterFrame, self);
         }
     }
 }

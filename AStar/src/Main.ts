@@ -61,9 +61,7 @@ class Main extends eui.UILayer {
         let self = this;
         Global.stage = self.stage;
         self.parent.removeChild(self);
-        let testAStar = new G.TestAStar();
-        Global.stage .addChild(testAStar);
-        // let testAStar2 = new G.TestAStar2();
-        // Global.stage.addChild(testAStar2);
+        G.TestAStar.show(Global.stage);
+        // G.TestAStar2.show(Global.stage);
     }
 }

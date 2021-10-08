@@ -4,7 +4,7 @@
  *
  */
 namespace G {
-    export class TestAStar2 extends mo.Layer {
+    export class TestAStar2 extends cyk.Layer {
         public grp_container: eui.Group;
         public btn_reset: eui.Button;
         public lbl_cost: eui.Label;
@@ -13,12 +13,12 @@ namespace G {
         private _grid: Grid;
         private _pathShape: egret.Shape;
 
-        protected ctor() {
+        private ctor() {
             let self = this;
             self._cellSize = 40;
         }
 
-        protected onEnter() {
+        private onEnter() {
             let self = this;
             self._grid = new Grid(Math.ceil(self.grp_container.width / self._cellSize), Math.floor((Global.stage.stageHeight - 58) / self._cellSize));
             self._grid.setStartNode(1, 1);
@@ -112,9 +112,8 @@ namespace G {
 
         private _tap_btn_translate(){
             let self = this;
-            self.parent.removeChild(self);
-            let testAStar = new G.TestAStar();
-            Global.stage .addChild(testAStar);
+            self.close();
+            G.TestAStar.show(Global.stage);
         }
     }
 }
