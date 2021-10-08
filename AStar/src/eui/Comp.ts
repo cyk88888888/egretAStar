@@ -1,7 +1,7 @@
 namespace mo {
     export class Comp extends eui.Component {
         protected _skinName: string;
-
+        public __className: string;
         public constructor() {
             super();
             let self = this;
@@ -56,11 +56,6 @@ namespace mo {
             }
         }
 
-        public get __className():string{
-            let self = this;
-            return self["constructor"]["name"];
-        }
-
         private onAddToStage(){
             console.log("我被添加到舞台了");
         }
@@ -79,4 +74,10 @@ namespace mo {
 
         }
     }
+}
+
+window["__reflect"] = function(classDefinition, className:string, interfaceNames){
+    let spliNames = className.split(".");
+    classDefinition["__className"] = spliNames[spliNames.length - 1];
+    console.log(className);
 }
