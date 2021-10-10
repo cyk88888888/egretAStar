@@ -26,10 +26,15 @@ namespace G {
 
         private onEnter() {
             let self = this;
+            self.onEmitter("aa",self.testEmmiter);
             self.makeGrid();
             self.makePlayer();
         }
 
+        private testEmmiter(eventData?:any){
+            let self = this;
+            if(eventData)  console.log(eventData.data);
+        }
         private onReset() {
             let self = this;
             self.grp_container.removeChildren();

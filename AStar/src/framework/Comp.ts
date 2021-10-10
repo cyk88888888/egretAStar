@@ -1,7 +1,8 @@
 namespace cyk {
     export class Comp extends eui.Component {
         protected _skinName: string;
-
+        private _objTapMap: { [objName: string]: Function };//已添加的显示对象点击事件的记录
+        private _emmitMap: {[event: string]: Function};//已注册的监听事件列表
         public constructor() {
             super();
             let self = this;
@@ -49,8 +50,6 @@ namespace cyk {
             self.addBtnCLickListener();
         }
 
-        private _objTapMap: { [objName: string]: Function };
-
         /**添加按钮点击事件监听**/
         private addBtnCLickListener() {
             let self = this;
@@ -68,13 +67,27 @@ namespace cyk {
             }
         }
 
-        private onAddToStage() {
-            console.log("我被添加到舞台了");
+        protected onEmitter(event: string, listener: Function){
+            let self = this;
+            cyk.emmiter.on(event, listener, self);
+            if(!self._emmitMap) self._emmitMap = {};
+            self._emmitMap[event] = listener;
         }
 
-        private onRemoveFormStage() {
+        protected unEmitter(event: string, listener: Function){
             let self = this;
-            console.log("我从到舞台移除了");
+            cyk.emmiter.un(event, listener, self);
+        }
+
+        private dispose(){
+            let self = this;
+            if(self._emmitMap){
+                for(let event in self._emmitMap){
+                    self.unEmitter(event, self._emmitMap[event]);
+                }
+                self._emmitMap = null;
+            }
+
             self.removeEventListener(egret.Event.ADDED_TO_STAGE, self.onRemoveFormStage, self);
             self.removeEventListener(egret.Event.ADDED_TO_STAGE, self.onAddToStage, self);
             if (self._objTapMap) {
@@ -82,8 +95,19 @@ namespace cyk {
                     let obj = self[objName];
                     if (obj instanceof egret.DisplayObject) obj.removeEventListener(egret.TouchEvent.TOUCH_TAP, self._objTapMap[objName], self);
                 }
+                self._objTapMap = null;
             }
+        }
 
+
+        private onAddToStage() {
+            console.log("我被添加到舞台了");
+        }
+
+        private onRemoveFormStage() {
+            let self = this;
+            console.log("我从到舞台移除了");
+            self.dispose();
             if(self["onExit"]) self["onExit"]();
         }
     }
